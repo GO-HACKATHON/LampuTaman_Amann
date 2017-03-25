@@ -6,7 +6,7 @@ package com.example.ai.amann_gohack;
 
 public class Config {
     /*
-     * Class ini digunakan untuk menyimpang string berupa konfigurasi-konfigurasi
+     * Class ini digunakan untuk menyimpan string berupa konfigurasi-konfigurasi
      * yang bersifat statis. Agar mempermudah jika ada perubahan konfigurasi
      */
     public static String api_domain = "http://10.17.10.210/amann_api/public/api/";

@@ -52,7 +52,7 @@
             <Button
                 android:text="Emergency"
                 android:layout_height="86dp"
-                android:id="@+id/button2"
+                android:id="@+id/btnEmergency"
                 android:layout_weight="0"
                 android:backgroundTint="@color/colorPrimary"
                 android:textColor="#fff"
@@ -63,7 +63,7 @@
             <Button
                 android:text="Tandai"
                 android:layout_height="86dp"
-                android:id="@+id/button"
+                android:id="@+id/btnTandai"
                 android:layout_weight="0"
                 android:backgroundTint="#fff"
                 android:textColor="@color/colorPrimary"
