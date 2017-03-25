@@ -31,7 +31,8 @@
         android:layout_marginBottom="10dp"
         android:hint="Username"
         android:textColor="#fff"
-        android:textColorHint="#fff" />
+        android:textColorHint="#fff"
+        android:inputType="textEmailAddress"/>
 
     <EditText
         android:id="@+id/etNama"
@@ -52,7 +53,7 @@
         android:padding="10dp"
         android:layout_marginBottom="10dp"
         android:hint="Password"
-        android:inputType="textPassword|textVisiblePassword"
+        android:inputType="textPassword"
         android:textColor="#fff"
         android:textColorHint="#fff" />
 
@@ -65,7 +66,8 @@
         android:layout_marginBottom="10dp"
         android:hint="Nomor HP"
         android:textColor="#fff"
-        android:textColorHint="#fff" />
+        android:textColorHint="#fff"
+        android:inputType="number"/>
 
     <EditText
 
@@ -77,7 +79,7 @@
         android:textColor="#fff"
         android:textColorHint="#fff"
         android:background="@color/colorPrimaryDark"
-        android:hint="Tanggal Lahir"
+        android:hint="Tanggal Lahir (YYYY/MM/DD)"
         android:padding="10dp" />
 
     <RadioGroup

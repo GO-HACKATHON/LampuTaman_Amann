@@ -1,13 +1,15 @@
 package com.example.ai.amann_gohack;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.content.Context;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -16,30 +18,27 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static android.webkit.ConsoleMessage.MessageLevel.LOG;
+import static android.R.id.message;
 
 public class MainActivity extends AppCompatActivity {
 
-    //Deklarasi variable
+    /*
+    * Deklarasi variabel
+    */
     private static final String TAG = "MainActivity";
     private Context context;
-    EditText etUser, etPassword;
+    private EditText etUser, etPassword;
     Button btnLogin, btnRegister;
-    String token;
+    private String token;
 
+    public static final String MY_PREFS_NAME = "MySP";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +57,11 @@ public class MainActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(buttonOperation);
 
     }
-// Command ketika button di tekan
+    /*
+     * Fungsi untuk mengenali button mana yang ditekan oleh user
+     * btnLogin button untuk verfikasi login
+     * btnRegister untuk masuk ke halaman pendaftaran
+     */
     private View.OnClickListener buttonOperation = new View.OnClickListener(){
         @Override
         public void onClick (View v) {
@@ -77,17 +80,24 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     }
                     loginCheck(username, password);
+                    break;
 
                 case R.id.btnRegister:
                     Intent registerIntent = new Intent(MainActivity.this, RegisterActivity.class);
-
                     startActivity(registerIntent);
+                    break;
 
 
             }
         }
     };
-// Fungsi untuk mengirim input username dan password ke web service dan mengecek apakah login berhasil atau sukses
+
+    /*
+   * Fungi loginCHek digunakan untuk memeriksa validasi pengguna
+   * Menggunakan POST method request dan library VOLLEY
+   * @param email : adalah email yang diinput oleh pengguna
+   * @param pass : adalah password yang diinput oleh pengguna
+   */
     public void loginCheck( final String uname, final String pass ){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://10.17.10.210/amann_api/public/api/login",
                 new Response.Listener<String>() {
@@ -101,10 +111,19 @@ public class MainActivity extends AppCompatActivity {
 
                             if(resp.equals("405")){
                                 Log.d(TAG, "hasil " + resp + msg);
+                                Toast.makeText(MainActivity.this, message,
+                                        Toast.LENGTH_LONG).show();
 
                             }
                             else if(resp.equals("200")){
                                 Log.d(TAG, "hasil " + resp + msg);
+//                                SharedPreferences.Editor editor =
+//                                        getSharedPreferences(Config.MY_PREFS_NAME, MODE_PRIVATE).edit();
+//                                editor.putString("email", email);
+//                                editor.commit();
+//                                Intent mapActivity = new Intent(MainActivity.this, MapsActivity.class);
+//                                startActivity(mapActivity);
+//                                finish();
                             }
 
                         } catch (JSONException e) {

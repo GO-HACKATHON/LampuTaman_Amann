@@ -33,9 +33,9 @@ import static com.example.ai.amann_gohack.R.id.etUser;
 public class HelperActivity extends AppCompatActivity {
 
     private static final String TAG = "HelperActivity";
-    EditText etUser1, etUser2, etUser3, etUser4, etUser5, etUser6;
-    Button btnRegister;
-    String username, password, nohp, nama, tgl, man, woman;
+    private EditText etUser1, etUser2, etUser3, etUser4, etUser5, etUser6;
+    private Button btnRegister;
+    private String username, password, nohp, nama, tgl, man, woman;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,29 +53,30 @@ public class HelperActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         username = extras.getString("username");
         password = extras.getString("password");
-        nohp = extras.getString("nohp");
+        nohp = extras.getString("hp");
         nama = extras.getString("nama");
+        tgl = extras.getString("tgl");
+
         if (extras.getString("sex").equals("Male")){
             man = extras.getString("sex");
         }else{
             woman = extras.getString("sex");
         }
 
-
         btnRegister = (Button) findViewById(R.id.btnRegister);
-
         btnRegister.setOnClickListener(buttonOperation);
-
-
     }
 
-    // Command ketika button di tekan
+    /*
+     * Fungsi untuk mengenali button mana yang ditekan oleh user
+     * btnRegister untuk masuk ke halaman pendaftaran
+     */
     private View.OnClickListener buttonOperation = new View.OnClickListener(){
         @Override
         public void onClick (View v) {
             switch (v.getId()){
 
-                case R.id.btnNext:
+                case R.id.btnRegister:
                     String user1 = etUser1.getText().toString();
                     String user2 = etUser2.getText().toString();
                     String user3 = etUser3.getText().toString();
@@ -110,14 +111,19 @@ public class HelperActivity extends AppCompatActivity {
                     if(man.equals("")) registerCheck(username, password, nohp, nama, tgl, user1, user2, user3, user4, user5, user6, woman);
                     else registerCheck(username, password, nohp, nama, tgl, user1, user2, user3, user4, user5, user6, man);
 
+                    Log.d(TAG, "params before " + username + " " + password + " " + nama + " " + nohp + " " + man + woman + " " + tgl + " " + user1 + " " + user2 + " " + user3 + " " + user4 + " " + user5 + " " + user6);
+
 
             }
         }
     };
 
-
-    public void registerCheck(final String sex, final String tgl, final String username, final String password, final String nohp, final String nama, final String user1,
-                               final String user2, final String user3, final String user4, final String user5, final String user6 ){
+    /*
+  * Fungi registerCheck digunakan untuk mendaftarkan pengguna
+  * Menggunakan POST method request dan library VOLLEY
+  */
+    public void registerCheck(final String username, final String password, final String nohp, final String nama, final String tgl, final String user1,
+                               final String user2, final String user3, final String user4, final String user5, final String user6, final String sex ){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://10.17.10.210/amann_api/public/api/register",
                 new Response.Listener<String>() {
                     @Override
