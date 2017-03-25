@@ -1,28 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:weightSum="1">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="341dp"
+        android:layout_weight="1.16">
 
-        <Button
-            android:text="Button"
-            android:layout_width="154dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/button2" />
+    </FrameLayout>
 
-        <Button
-            android:text="Button"
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="114dp"
+        android:background="#303030"
+        android:elevation="0dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:elevation="0dp">
+
+            <Button
+                android:text="Emergency"
+                android:layout_height="86dp"
+                android:id="@+id/button2"
+                android:layout_weight="0"
+                android:backgroundTint="@color/colorPrimary"
+                android:textColor="#fff"
+                android:layout_width="170dp"
+                android:layout_marginLeft="20dp"
+                android:paddingTop="0dp" />
+
+            <Button
+                android:text="Tandai"
+                android:layout_height="86dp"
+                android:id="@+id/button"
+                android:layout_weight="0"
+                android:backgroundTint="#fff"
+                android:textColor="@color/colorPrimary"
+                android:layout_width="170dp"
+                android:paddingTop="0dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:text="Anda berada dalam daerah aman"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/button" />
+            android:id="@+id/textView2"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textColor="#fff"
+            android:layout_marginTop="75dp" />
 
-        <Button
-            android:text="Button"
-            android:layout_width="154dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/button3" />
     </FrameLayout>
 </LinearLayout>
