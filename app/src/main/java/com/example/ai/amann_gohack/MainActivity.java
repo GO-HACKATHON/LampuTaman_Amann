@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 //        btnRegister.setOnClickListener(buttonOperation);
 
     }
-
+// Command ketika button di tekan
     private View.OnClickListener buttonOperation = new View.OnClickListener(){
         @Override
         public void onClick (View v) {
@@ -74,45 +74,27 @@ public class MainActivity extends AppCompatActivity {
                         etPassword.setError("Harus diisi!");
                         break;
                     }
-
                     loginCheck(username, password);
-
-
-
-
             }
         }
     };
-
+// Fungsi untuk mengirim input username dan password ke web service dan mengecek apakah login berhasil atau sukses
     public void loginCheck( final String uname, final String pass ){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://mobile.if.its.ac.id/amann/addmarker.php",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://10.17.10.210/amann_api/public/api/login",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
                             Log.v("POST", response);
-                            JSONArray userpass = new JSONArray(response);
-//                            for (int i=0; i<latlng.length(); i++){
-//                                JSONObject get = latlng.getJSONObject(i);
-//                                String lat_daerah = get.getString("lat_daerah");
-//                                String lng_daerah = get.getString("lng_daerah");
-//                                String deskripsi = get.getString("deskripsi_daerah");
-//                                Marker mark = mMap.addMarker(new MarkerOptions().position(
-//                                        new LatLng(Double.parseDouble(lat_daerah),
-//                                                Double.parseDouble(lng_daerah)))
-//                                        .icon(BitmapDescriptorFactory.fromBitmap(resizeMarker(R.drawable.pin, 150, 150))));
-//                                mark.setTitle(deskripsi);
-//                                markerList.add(mark);
-//                            }
-                            JSONObject get = userpass.getJSONObject(0);
+                            JSONObject get = new JSONObject(response);
                             String resp = get.getString("response");
                             String msg = get.getString("message");
 
-                            if(resp.equals(401)){
+                            if(resp.equals("405")){
                                 Log.d(TAG, "hasil " + resp + msg);
 
                             }
-                            else if(resp.equals(200)){
+                            else if(resp.equals("200")){
                                 Log.d(TAG, "hasil " + resp + msg);
                             }
 
@@ -133,13 +115,12 @@ public class MainActivity extends AppCompatActivity {
                 params.put("key", "matapancing");
                 params.put("email_pengguna", uname);
                 params.put("password_pengguna", pass);
+                Log.d(TAG, "var pass" + uname + pass);
 
                 return params;
             }
         };
-//        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-//                30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        RequestQueue requestQueue = Volley.newRequestQueue(this.context);
+        RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
         requestQueue.add(stringRequest);
     }
 
