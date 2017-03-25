@@ -1,5 +1,6 @@
 package com.example.ai.amann_gohack;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btnLogin = (Button) findViewById(R.id.btnLogin);
+        btnRegister = (Button) findViewById(R.id.btnRegister);
         etUser = (EditText) findViewById(R.id.etUser);
         etPassword = (EditText) findViewById(R.id.etPassword);
 
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         // buttonOperation adalah fungsi untuk untuk mengidentifikasi button yang ditekan
         btnLogin.setOnClickListener(buttonOperation);
-//        btnRegister.setOnClickListener(buttonOperation);
+        btnRegister.setOnClickListener(buttonOperation);
 
     }
 // Command ketika button di tekan
@@ -66,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                     String username = etUser.getText().toString();
                     String password = etPassword.getText().toString();
 
-                    if (username.equals("") || password.equals("")) {
+                    if (username.equals("") ) {
                         etUser.setError("Harus diisi!");
                         break;
                     }
@@ -75,6 +77,13 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     }
                     loginCheck(username, password);
+
+                case R.id.btnRegister:
+                    Intent registerIntent = new Intent(MainActivity.this, RegisterActivity.class);
+
+                    startActivity(registerIntent);
+
+
             }
         }
     };
