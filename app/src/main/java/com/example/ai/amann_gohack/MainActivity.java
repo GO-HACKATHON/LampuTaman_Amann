@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 
 import org.json.JSONArray;
@@ -54,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         btnRegister = (Button) findViewById(R.id.btnRegister);
         etUser = (EditText) findViewById(R.id.etUser);
         etPassword = (EditText) findViewById(R.id.etPassword);
+
+        token = FirebaseInstanceId.getInstance().getToken();
 
         btnLogin.setOnClickListener(buttonOperation);
         btnRegister.setOnClickListener(buttonOperation);
@@ -139,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
                 params.put("key", Config.key);
                 params.put("email_pengguna", email);
                 params.put("password_pengguna", pass);
+                params.put("token", token);
                 return params;
             }
         };
