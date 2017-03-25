@@ -17,10 +17,8 @@ public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
     private EditText etEmail, etPassword, etNohp, etNama, etTgl;
     private String man, woman;
-    private Integer flag = 0;
     private Button btnNext;
-    private Integer flag = 0;
-    private Button btnNext;
+    private Integer flag;
     private RadioGroup radioGroup;
 
 
@@ -29,6 +27,8 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        flag = 0;
 
         btnNext = (Button) findViewById(R.id.btnNext);
         etEmail = (EditText) findViewById(R.id.etEmail);

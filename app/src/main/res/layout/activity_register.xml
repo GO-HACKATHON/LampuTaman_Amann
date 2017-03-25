@@ -86,7 +86,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:id="@+id/radioGroup">
+        android:id="@+id/radioGroup"
+        android:background="@color/colorPrimaryDark"
+        android:layout_marginTop="10dp"
+        android:padding="5dp">
 
         <TextView
             android:text="Kelamin"
@@ -95,9 +98,8 @@
             android:id="@+id/textView3"
             android:layout_weight="0.19"
             android:textColor="#fff"
-            android:layout_marginTop="10dp"
             android:paddingLeft="10dp"
-            android:textSize="20dp" />
+            android:textSize="17sp" />
 
         <RadioButton
             android:text="Man"
@@ -107,8 +109,7 @@
             android:layout_weight="0.07"
             android:textColorHint="#fff"
             android:textColor="#fff"
-            android:textSize="17sp"
-            android:layout_marginTop="10dp" />
+            android:textSize="17sp" />
 
         <RadioButton
             android:text="Woman"
@@ -118,8 +119,7 @@
             android:layout_weight="1"
             android:textColorHint="#fff"
             android:textColor="#fff"
-            android:textSize="17sp"
-            android:layout_marginTop="10dp" />
+            android:textSize="17sp" />
     </RadioGroup>
 
     <Button
