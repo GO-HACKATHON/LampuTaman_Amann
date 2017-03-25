@@ -19,6 +19,8 @@ public class RegisterActivity extends AppCompatActivity {
     private String man, woman;
     private Integer flag = 0;
     private Button btnNext;
+    private Integer flag = 0;
+    private Button btnNext;
     private RadioGroup radioGroup;
 
 
