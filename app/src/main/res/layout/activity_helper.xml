@@ -31,73 +31,79 @@
             android:id="@+id/etUser1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="+62"
+            android:hint="08xxx"
             android:textColor="#fff"
             android:background="@color/colorPrimaryDark"
             android:padding="10dp"
             android:layout_marginBottom="5dp"
             android:paddingStart="10dp"
-            android:textColorHint="#fff" />
+            android:textColorHint="#fff"
+            android:inputType="number"/>
 
         <EditText
             android:id="@+id/etUser2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="+62"
+            android:hint="08xxx"
             android:textColor="#fff"
             android:background="@color/colorPrimaryDark"
             android:padding="10dp"
             android:layout_marginBottom="5dp"
             android:paddingStart="10dp"
-            android:textColorHint="#fff" />
+            android:textColorHint="#fff"
+            android:inputType="number"/>
 
         <EditText
             android:id="@+id/etUser3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="+62"
+            android:hint="08xxx"
             android:textColor="#fff"
             android:background="@color/colorPrimaryDark"
             android:padding="10dp"
             android:layout_marginBottom="5dp"
             android:paddingStart="10dp"
-            android:textColorHint="#fff" />
+            android:textColorHint="#fff"
+            android:inputType="number"/>
 
         <EditText
             android:id="@+id/etUser4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="+62"
+            android:hint="08xxx"
             android:textColor="#fff"
             android:background="@color/colorPrimaryDark"
             android:padding="10dp"
             android:layout_marginBottom="5dp"
             android:paddingStart="10dp"
-            android:textColorHint="#fff" />
+            android:textColorHint="#fff"
+            android:inputType="number"/>
 
         <EditText
             android:id="@+id/etUser5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="+62"
+            android:hint="08xxx"
             android:textColor="#fff"
             android:background="@color/colorPrimaryDark"
             android:padding="10dp"
             android:layout_marginBottom="5dp"
             android:paddingStart="10dp"
-            android:textColorHint="#fff" />
+            android:textColorHint="#fff"
+            android:inputType="number"/>
 
         <EditText
             android:id="@+id/etUser6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="+62"
+            android:hint="08xxx"
             android:textColor="#fff"
             android:background="@color/colorPrimaryDark"
             android:padding="10dp"
             android:layout_marginBottom="5dp"
             android:paddingStart="10dp"
-            android:textColorHint="#fff" />
+            android:textColorHint="#fff"
+            android:inputType="number"/>
 
         <Button
             android:id="@+id/btnRegister"

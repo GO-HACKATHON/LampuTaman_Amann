@@ -8,14 +8,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 public class RegisterActivity extends AppCompatActivity {
-
+    /*
+    * Deklarasi variabel
+     */
     private static final String TAG = "RegisterActivity";
-    EditText etEmail, etPassword, etNohp, etNama, etTgl;
+    private EditText etEmail, etPassword, etNohp, etNama, etTgl;
     private String man, woman;
-    Integer flag = 0;
-    Button btnNext;
+    private Integer flag = 0;
+    private Button btnNext;
+    private RadioGroup radioGroup;
 
 
 
@@ -31,32 +35,30 @@ public class RegisterActivity extends AppCompatActivity {
         etNohp = (EditText) findViewById(R.id.etNohp);
         etTgl = (EditText) findViewById(R.id.etTgl);
 
-        btnNext.setOnClickListener(buttonOperation);
+        radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
 
-
-
-    }
-
-    public void onRadioButtonClicked(View view) {
-        // Is the button now checked?
-        boolean checked = ((RadioButton) view).isChecked();
-
-        // Check which radio button was clicked
-        switch(view.getId()) {
-            case R.id.rbMan:
-                if (checked)
-                    man = "Male";
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                if(i == R.id.rbMan) {
                     flag = 1;
-                    break;
-            case R.id.rbWoman:
-                if (checked)
-                    woman = "Female";
+                    man = "Male";
+                }
+                else if(i == R.id.rbWoman) {
                     flag = 2;
-                    break;
-        }
+                    woman = "Female";
+                }
+            }
+        });
+
+        btnNext.setOnClickListener(buttonOperation);
     }
 
-    // Command ketika button di tekan
+
+    /*
+     * Fungsi untuk mengenali button mana yang ditekan oleh user
+     * btnNext untuk lanjut ke halaman helper
+     */
     private View.OnClickListener buttonOperation = new View.OnClickListener(){
         @Override
         public void onClick (View v) {
@@ -98,9 +100,10 @@ public class RegisterActivity extends AppCompatActivity {
                     helperIntent.putExtra("password", password);
                     helperIntent.putExtra("nama", nama);
                     helperIntent.putExtra("hp", hp);
+                    helperIntent.putExtra("tgl", tgl);
                     if (flag == 1) helperIntent.putExtra("sex", man);
                     else if(flag == 2) helperIntent.putExtra("sex", woman);
-                    Log.d(TAG, "gender" + man + woman);
+                    Log.d(TAG, "gender" + man + woman + username + password + nama + hp + tgl);
                     startActivity(helperIntent);
 
 
