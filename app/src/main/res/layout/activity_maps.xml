@@ -32,6 +32,20 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="180dp" />
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top|right"
+            android:padding="10dp">
+
+            <Button
+                android:text="Refresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/button2" />
+        </LinearLayout>
+
     </FrameLayout>
 
     <FrameLayout
@@ -57,7 +71,7 @@
                 android:backgroundTint="@color/colorPrimary"
                 android:textColor="#fff"
                 android:layout_width="170dp"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="10dp"
                 android:paddingTop="0dp" />
 
             <Button
@@ -76,7 +90,7 @@
             android:text="Anda berada dalam daerah aman"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textView2"
+            android:id="@+id/warning"
             android:layout_weight="1"
             android:textAlignment="center"
             android:textColor="#fff"

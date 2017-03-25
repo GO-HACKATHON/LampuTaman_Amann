@@ -61,6 +61,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private TheLocationListener myLocationListener;
     private Marker currentMarker;
     private Button btnTandai, btnEmergency;
+    private TextView warning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +70,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        warning = (TextView)findViewById(R.id.warning);
 
         btnTandai = (Button) findViewById(R.id.btnTandai);
         btnTandai.setOnClickListener(new View.OnClickListener() {
@@ -176,35 +179,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void goToCurrentLocation (){
         myLocationManager = (LocationManager) MapsActivity.this.getSystemService(LOCATION_SERVICE);
         myLocationListener = new TheLocationListener();
-        myLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, myLocationListener);
         boolean isGPSEnabled = myLocationManager
                 .isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean isNetworkEnabled = myLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
         if (!isGPSEnabled) {
             this.goToGPSSetting();
-        } else {
-            if (ActivityCompat.checkSelfPermission(MapsActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(MapsActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                            != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-
-            Location location = null;
-            while (location == null){
-                location = myLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                if (location != null) break;
-                else location = myLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            }
-            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            if (currentMarker == null){
-                currentMarker = mMap.addMarker(new MarkerOptions().position(latLng));
-            } else {
-                currentMarker.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
-            }
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
         }
+        myLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 0, myLocationListener);
+        myLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 500, 0, myLocationListener);
+        if (ActivityCompat.checkSelfPermission(MapsActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(MapsActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        Location location = null;
+        while (location == null){
+            location = myLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (location != null) break;
+            else location = myLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        }
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        if (currentMarker == null){
+            currentMarker = mMap.addMarker(new MarkerOptions().position(latLng));
+        } else {
+            currentMarker.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
+        }
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
     }
 
     private class TheLocationListener implements LocationListener{
@@ -236,6 +240,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         handler.postDelayed(this, 16);
                     } else {
                         currentMarker.setPosition(new LatLng(lat, lng));
+                    }
+                }
+            });
+
+            TheMarker theMarker = new TheMarker(MapsActivity.this);
+            theMarker.getCurrentStatus(lat, lng, new TheMarker.VolleyCallback() {
+                @Override
+                public void onSuccessResponse(String result) {
+                    if(result.equals("aman")){
+                        warning.setText("Anda berada dalam daerah aman");
+                        warning.setTextColor(Color.parseColor("#4285f4"));
+                    } else if(result.equals("sedang")){
+                        warning.setText("Anda berada dalam daerah rawan");
+                        warning.setTextColor(Color.parseColor("#D2DE52"));
+                        Vibrator vibrator = (Vibrator) MapsActivity.this.getSystemService(Context.VIBRATOR_SERVICE);
+                        vibrator.vibrate(2000);
+                    } else if(result.equals("rawan")){
+                        warning.setText("Anda berada dalam daerah sangat rawan");
+                        warning.setTextColor(Color.parseColor("#F63131"));
+                        Vibrator vibrator = (Vibrator) MapsActivity.this.getSystemService(Context.VIBRATOR_SERVICE);
+                        vibrator.vibrate(5000);
                     }
                 }
             });

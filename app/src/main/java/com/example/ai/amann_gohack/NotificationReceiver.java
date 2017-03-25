@@ -58,7 +58,7 @@ public class NotificationReceiver extends FirebaseMessagingService{
                 PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+        NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.amann_launcher)
                 .setContentTitle("Amann Notification")
                 .setContentText(messageBody)
