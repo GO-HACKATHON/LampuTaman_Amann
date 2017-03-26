@@ -153,16 +153,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 // Get token
                 String token = FirebaseInstanceId.getInstance().getToken();
-
-                // Log and toast
-                Location location = myLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                
+                // Get longitude, latitude
+                Location location = null;
+                while (location == null){
+                    location = myLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    if (location != null) break;
+                    else location = myLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                }
 
                 latitude = Double.toString(location.getLatitude());
                 longitude = Double.toString(location.getLongitude());
 
                 Log.d(TAG, "token = " + token);
-                Log.d(TAG, "longitude = " + longitude);
-                Log.d(TAG, "latitude = " + latitude);
+                Log.d(TAG, "longitude = " + latitude);
+                Log.d(TAG, "latitude = " + longitude);
 
                 tokenCheck(token, longitude, latitude);
             }
