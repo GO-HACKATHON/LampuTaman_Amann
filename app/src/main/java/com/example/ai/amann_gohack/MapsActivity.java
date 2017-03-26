@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -50,8 +52,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -60,7 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationManager myLocationManager;
     private TheLocationListener myLocationListener;
     private Marker currentMarker;
-    private Button btnTandai, btnEmergency;
+    private Button btnTandai, btnEmergency, btnRefresh;
     private TextView warning;
 
     @Override
@@ -137,6 +141,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // DIISI OLEH IKHSAN
             }
         });
+
+        btnRefresh = (Button)findViewById(R.id.btnRefresh);
+        btnRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMap.clear();
+                currentMarker = null;
+                new RefreshLocation().execute();
+            }
+        });
     }
 
     @Override
@@ -165,6 +179,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     });
                 }
             }.start();
+            new TheMarker(MapsActivity.this).showAllMarker(mMap);
             return null;
         }
 
@@ -338,8 +353,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 String email = prefs.getString("email", "null");
                 Log.d("email", email);
 
-                //String nama_daerah = getAreaName(lat, lng);
-                String nama_daerah = "Indonesia";
+                String nama_daerah = getAreaName(latitude, longitude);
+                //String nama_daerah = "Indonesia";
 
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("key", Config.key);
@@ -356,7 +371,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private String getAreaName(Double latitude, Double longitude){
-        String result = null;
-        return result;
+        Geocoder geocoder = new Geocoder(MapsActivity.this, Locale.getDefault());
+        try {
+            List<Address> address = geocoder.getFromLocation(latitude, longitude, 1);
+            String feature = address.get(0).getFeatureName();
+            String locality = address.get(0).getLocality();
+            String city = address.get(0).getSubAdminArea();
+            String province = address.get(0).getAdminArea();
+            String areaName = feature+","+locality+","+city+","+province;
+            return areaName;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

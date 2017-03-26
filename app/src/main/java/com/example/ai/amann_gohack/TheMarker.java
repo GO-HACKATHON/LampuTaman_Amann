@@ -12,7 +12,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -57,6 +63,44 @@ public class TheMarker {
                 params.put("key", Config.key);
                 params.put("lat", Double.toString(latitude));
                 params.put("lng", Double.toString(longitude));
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this.context);
+        requestQueue.add(stringRequest);
+    }
+
+    public void showAllMarker(final GoogleMap mMap){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.api_domain+"getallpin",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray latlng = new JSONArray(response);
+                            for (int i=0; i<latlng.length(); i++){
+                                JSONObject get = latlng.getJSONObject(i);
+                                String lat_daerah = get.getString("lat_daerah");
+                                String lng_daerah = get.getString("lng_daerah");
+                                String deskripsi = get.getString("deskripsi_daerah");
+                                Marker mark = mMap.addMarker(new MarkerOptions().position(
+                                        new LatLng(Double.parseDouble(lat_daerah),
+                                                Double.parseDouble(lng_daerah))));
+                                mark.setTitle(deskripsi);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Volley Error", error.toString());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("key", Config.key);
                 return params;
             }
         };
