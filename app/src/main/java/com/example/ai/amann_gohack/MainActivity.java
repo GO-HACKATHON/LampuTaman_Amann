@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         etPassword = (EditText) findViewById(R.id.etPassword);
 
         token = FirebaseInstanceId.getInstance().getToken();
+        Log.d("Token", token);
 
         btnLogin.setOnClickListener(buttonOperation);
         btnRegister.setOnClickListener(buttonOperation);
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                         etPassword.setError("Harus diisi!");
                         break;
                     }
-                    loginCheck(username, password);
+                    loginCheck(username, password, token);
                     break;
 
                 case R.id.btnRegister:
@@ -101,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
     * @param email : adalah email yang diinput oleh pengguna
     * @param pass : adalah password yang diinput oleh pengguna
     */
-    public void loginCheck(final String email, final String pass ){
+    public void loginCheck(final String email, final String pass, final String token){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.api_domain+"login",
                 new Response.Listener<String>() {
                     @Override
