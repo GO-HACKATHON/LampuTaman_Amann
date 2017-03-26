@@ -337,6 +337,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         handler.postDelayed(this, 16);
                     } else {
                         currentMarker.setPosition(new LatLng(lat, lng));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                        mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
                     }
                 }
             });
