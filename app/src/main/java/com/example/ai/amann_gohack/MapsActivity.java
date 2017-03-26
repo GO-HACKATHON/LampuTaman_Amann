@@ -7,12 +7,11 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.os.Vibrator;
@@ -22,6 +21,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +48,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,6 +67,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Marker currentMarker;
     private Button btnTandai, btnEmergency, btnRefresh;
     private TextView warning;
+    private String longitude, latitude;
+    static final private String TAG = "MapsActivity";
+    String SENT = "SMS_SENT";
+    String DELIVERED = "SMS_DELIVERED";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,7 +145,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         btnEmergency.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // DIISI OLEH IKHSAN
+                // Get token
+                String token = FirebaseInstanceId.getInstance().getToken();
+
+                // Log and toast
+                Location location = myLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+                latitude = Double.toString(location.getLatitude());
+                longitude = Double.toString(location.getLongitude());
+
+                Log.d(TAG, "token = " + token);
+                Log.d(TAG, "longitude = " + longitude);
+                Log.d(TAG, "latitude = " + latitude);
             }
         });
 
@@ -151,6 +169,57 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 new RefreshLocation().execute();
             }
         });
+    }
+
+    public void tokenCheck(final String token, final String longitude, final String latitude ){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.api_domain+"token",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject get = new JSONObject(response);
+                            String resp = get.getString("response");
+                            String message = get.getString("message");
+
+                            if(resp.equals("200")){
+                                Toast.makeText(MapsActivity.this, message,
+                                        Toast.LENGTH_LONG).show();
+                            }
+                            else if(resp.equals("500")){
+//                              // Mengirim SMS
+                                String number[] = message.split("=");
+                                for(String current: number){
+                                    current = current.replaceAll("\\s","");
+                                    //Toast.makeText(MapsActivity.this, "isi " + current, Toast.LENGTH_LONG).show();
+                                    if(current != ""){
+                                        //Toast.makeText(MapsActivity.this, "current " + current, Toast.LENGTH_LONG).show();
+                                        sendSMS(current, "Aplikasi Amann. Teman anda telah mengirimkan sinyal darurat di koordinat " + latitude + "," + longitude  );
+                                    }
+                                }
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Volley Error", error.toString());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("key", Config.key);
+                params.put("longitude", longitude);
+                params.put("latitude", latitude);
+                params.put("token", token);
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(MapsActivity.this);
+        requestQueue.add(stringRequest);
     }
 
     @Override
@@ -384,5 +453,68 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             e.printStackTrace();
         }
         return null;
+    }
+
+    private void sendSMS(String phoneNumber, String message) {
+
+        PendingIntent sentPI = PendingIntent.getBroadcast(this, 0,
+                new Intent(SENT), 0);
+
+        PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0,
+                new Intent(DELIVERED), 0);
+
+//---when the SMS has been sent---
+        registerReceiver(new BroadcastReceiver(){
+            @Override
+            public void onReceive(Context arg0, Intent arg1) {
+                switch (getResultCode())
+                {
+                    case Activity.RESULT_OK:
+                        Toast.makeText(getBaseContext(), "SMS sent", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "SMS sent");
+                        break;
+                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                        //Toast.makeText(getBaseContext(), "Generic failure", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "Generic failure");
+                        break;
+                    case SmsManager.RESULT_ERROR_NO_SERVICE:
+//                        Toast.makeText(getBaseContext(), "No service", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "No servicet");
+                        break;
+                    case SmsManager.RESULT_ERROR_NULL_PDU:
+//                        Toast.makeText(getBaseContext(), "Null PDU", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "Null PDU");
+                        break;
+                    case SmsManager.RESULT_ERROR_RADIO_OFF:
+                        //Toast.makeText(getBaseContext(), "Radio off",Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "Radio off");
+                        break;
+                }
+            }
+        }, new IntentFilter(SENT));
+
+//---when the SMS has been delivered---
+        registerReceiver(new BroadcastReceiver(){
+            @Override
+            public void onReceive(Context arg0, Intent arg1) {
+                switch (getResultCode())
+                {
+                    case Activity.RESULT_OK:
+                        //Toast.makeText(getBaseContext(), "SMS delivered", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "SMS delivered");
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        //Toast.makeText(getBaseContext(), "SMS not delivered", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "SMS not delivered");
+                        break;
+                }
+            }
+        }, new IntentFilter(DELIVERED));
+
+        SmsManager sms = SmsManager.getDefault();
+        sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
+//        Toast.makeText(getApplicationContext(), "SMS sent.",
+//                            Toast.LENGTH_LONG).show();
+
     }
 }
