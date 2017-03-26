@@ -163,6 +163,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.d(TAG, "token = " + token);
                 Log.d(TAG, "longitude = " + longitude);
                 Log.d(TAG, "latitude = " + latitude);
+
+                tokenCheck(token, longitude, latitude);
             }
         });
 
